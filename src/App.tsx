@@ -14,35 +14,52 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+// TypeScript interfaces
+interface Tag {
+  name: string;
+  color: string;
+}
+
+interface Artwork {
+  id: string;
+  title: string;
+  description: string;
+  images: string;
+  date: string;
+  location: string;
+  position: [number, number];
+  tags: Tag[];
+}
+
 function App() {
-  const [artworks, setArtworks] = useState([]);
-  const [selectedTag, setSelectedTag] = useState(null);
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     fetch("/api/notion-artworks")
       .then(res => res.json())
-      .then(data => setArtworks(data));
+      .then((data: Artwork[]) => setArtworks(data));
   }, []);
 
   // Extract unique tags (by name) with color
-  const tagMap = new Map();
-  artworks.forEach(art => {
-    (art.tags || []).forEach(tag => {
+  const tagMap = new Map<string, Tag>();
+  artworks.forEach((art) => {
+    (art.tags || []).forEach((tag: Tag) => {
       if (tag && tag.name && !tagMap.has(tag.name)) {
         tagMap.set(tag.name, tag);
       }
     });
   });
-  const allTags = Array.from(tagMap.values());
+  const allTags: Tag[] = Array.from(tagMap.values());
 
   // Filtered artworks for gallery
-  const filteredArtworks = selectedTag
-    ? artworks.filter(art => (art.tags || []).some(tag => tag.name === selectedTag))
+  const filteredArtworks: Artwork[] = selectedTag
+    ? artworks.filter(art => (art.tags || []).some((tag: Tag) => tag.name === selectedTag))
     : [];
 
   // Notion color to CSS color mapping (approximate)
-  const notionColorMap = {
+  const notionColorMap: Record<string, string> = {
     default: '#e0e0e0',
     gray: '#e3e3e3',
     brown: '#e9d5c0',

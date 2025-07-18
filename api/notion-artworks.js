@@ -12,11 +12,11 @@ export default async function handler(req, res) {
       const props = page.properties;
       return {
         id: page.id,
-        title: props.Title.rich_text?.[0].plain_text || "",
-        description: props.Description.rich_text?.[0].plain_text || "",
+        title: props.Title.rich_text?.[0]?.plain_text || "",
+        description: props.Description.rich_text?.[0]?.plain_text || "",
         images: props.Images.url || "",
         date: props.Date.date?.start || "",
-        location: props.Location.rich_text?.[0].plain_text || "",
+        location: props.Location.rich_text?.[0]?.plain_text || "",
         position: [
           parseFloat(props.Latitude.number),
           parseFloat(props.Longitude.number)
