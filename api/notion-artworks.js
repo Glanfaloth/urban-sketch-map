@@ -20,7 +20,8 @@ export default async function handler(req, res) {
         position: [
           parseFloat(props.Latitude.number),
           parseFloat(props.Longitude.number)
-        ]
+        ],
+        tags: props.Tag.multi_select.map(tag => ({ name: tag.name, color: tag.color }))
       };
     });
 
